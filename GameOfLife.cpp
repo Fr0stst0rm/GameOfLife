@@ -1,8 +1,9 @@
 #include <iostream>
 #include "GOLMap.h"
-
 #include <chrono>
 #include <thread>
+#include <sstream>
+#include <iomanip>
 
 int generations = 250;
 std::string load_name;
@@ -10,12 +11,14 @@ std::string save_name;
 bool should_measure = false;
 bool is_sequential;
 
-int main(int argc, char * argv[])
+std::string formatTime(std::chrono::steady_clock::duration time);
+
+int main(int argc, char* argv[])
 {
-	std::chrono::milliseconds startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-	std::chrono::milliseconds initTime;
-	std::chrono::milliseconds kernelTime;
-	std::chrono::milliseconds finalTime;
+	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
+	std::chrono::steady_clock::time_point initTime;
+	std::chrono::steady_clock::time_point kernelTime;
+	std::chrono::steady_clock::time_point finalTime;
 
 	if (argc > 1)
 	{
@@ -51,7 +54,7 @@ int main(int argc, char * argv[])
 	GOLMap* map = new GOLMap("maps/random250_in.gol");
 	//GOLMap* map = new GOLMap("maps/test.gol");
 
-	initTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+	initTime = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < generations; i++) {
 
 
@@ -66,18 +69,31 @@ int main(int argc, char * argv[])
 	//std::cout << *map << "\n";
 
 
-	kernelTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+	kernelTime = std::chrono::high_resolution_clock::now();
 
 	map->printToFile("out.gol");
 
 	delete map;
-	finalTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+	finalTime = std::chrono::high_resolution_clock::now();
 
 	std::cout << "Finished!\n";
 
-	std::cout << "Init time: " << (initTime - startTime).count() << "ms\n";
-	std::cout << "Kenel time: " << (kernelTime - initTime).count() << "ms\n";
-	std::cout << "Final time: " << (finalTime - kernelTime).count() << "ms\n";
+	std::cout << "Init time:  " << formatTime(initTime - startTime) << "\n";
+	std::cout << "Kenel time: " << formatTime(kernelTime - initTime) << "\n";
+	std::cout << "Final time: " << formatTime(finalTime - kernelTime) << "\n";
 
-	std::cout << "Total time: " << (finalTime - startTime).count() << "ms\n";
+	std::cout << "Total time: " << formatTime(finalTime - startTime) << "\n";
+}
+
+std::string formatTime(std::chrono::steady_clock::duration time) {
+	std::chrono::hours h = std::chrono::duration_cast<std::chrono::hours>(time);
+	time -= h;
+	std::chrono::minutes m = std::chrono::duration_cast<std::chrono::minutes>(time);
+	time -= m;
+	std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds>(time);
+	time -= s;
+	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+	std::stringstream ss;
+	ss << std::setfill('0') << std::setw(2) << h.count() << ":" << std::setw(2) << m.count() << ":" << std::setw(2) << s.count() << "." << std::setw(3) << ms.count();
+	return ss.str();
 }
