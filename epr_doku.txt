@@ -1,2 +1,7 @@
 Ohne Optimieren:
 Release: x64 random250_out.gol
+Finished!
+Init time: 3ms
+Kenel time: 4654ms
+Final time: 27ms
+Total time: 4684ms
