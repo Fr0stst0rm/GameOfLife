@@ -6,8 +6,8 @@
 #include <iomanip>
 
 int generations = 250;
-std::string load_name;
-std::string save_name;
+std::string load_name = "maps/random10000_in.gol";
+std::string save_name = "out.gol";
 bool should_measure = false;
 bool is_sequential;
 
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	GOLMap* map = new GOLMap("maps/random250_in.gol");
+	GOLMap* map = new GOLMap(load_name);
 	//GOLMap* map = new GOLMap("maps/test.gol");
 
 	initTime = std::chrono::high_resolution_clock::now();
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 
 	kernelTime = std::chrono::high_resolution_clock::now();
 
-	map->printToFile("out.gol");
+	map->printToFile(save_name);
 
 	delete map;
 	finalTime = std::chrono::high_resolution_clock::now();
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	std::cout << "Finished!\n";
 
 	std::cout << "Init time:  " << formatTime(initTime - startTime) << "\n";
-	std::cout << "Kenel time: " << formatTime(kernelTime - initTime) << "\n";
+	std::cout << "Kernel time: " << formatTime(kernelTime - initTime) << "\n";
 	std::cout << "Final time: " << formatTime(finalTime - kernelTime) << "\n";
 
 	std::cout << "Total time: " << formatTime(finalTime - startTime) << "\n";

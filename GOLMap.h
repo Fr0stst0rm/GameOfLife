@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 
+#define XY_TO_INDEX(X,Y) (((Y) * m_Size.width) + ( X ))
+
 struct Size
 {
 	int width;
@@ -31,7 +33,6 @@ public:
 	void toggle(Point point);
 
 	int getNrOfNeighbors(int x, int y);
-	int getNrOfNeighbors(Point point);
 
 	int nextGen();
 
@@ -45,8 +46,11 @@ private:
 	Size m_Size;
 	int m_Generations = 0;
 
-	char ** m_Map;
-	char** m_Buffermap;
+	
+	char* m_Map;
+	char* m_Buffermap;
+	//char** m_Map;
+	//char ** m_Buffermap;
 
 	void initMap(int width, int height);
 

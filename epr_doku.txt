@@ -1,7 +1,18 @@
 Ohne Optimieren:
-Release: x64 random250_out.gol
+Release: x64 random10000_out.gol
+
+GameOfLife.exe --generations 250 --load maps/random10000_in.gol
 Finished!
-Init time: 3ms
-Kenel time: 4654ms
-Final time: 27ms
-Total time: 4684ms
+Init time:  00:00:00.102
+Kenel time: 00:02:40.749
+Final time: 00:00:00.511
+Total time: 00:02:41.364
+
+Ram 20 MB
+
+GameOfLife.exe --generations 250 --load maps/random10000_in.gol
+Finished!
+Init time:  00:00:00.100
+Kenel time: 00:02:36.797
+Final time: 00:00:00.503
+Total time: 00:02:37.402
