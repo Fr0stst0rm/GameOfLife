@@ -9,12 +9,13 @@ int generations = 250;
 std::string load_name = "maps/random10000_in.gol";
 std::string save_name = "out.gol";
 bool should_measure = false;
-bool is_sequential;
+bool is_sequential = true;
 
 std::string formatTime(std::chrono::steady_clock::duration time);
 
 int main(int argc, char* argv[])
 {
+	
 	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point initTime;
 	std::chrono::steady_clock::time_point kernelTime;
@@ -22,7 +23,7 @@ int main(int argc, char* argv[])
 
 	if (argc > 1)
 	{
-		for (int i = 0; i < argc; i++)//argv[i]
+		for (int i = 0; i < argc; i++)
 		{
 			const std::string arg = argv[i];
 			if (arg == "--load") {
@@ -50,39 +51,31 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
+	std::cout << "Starting " << load_name << "\n";
 
 	GOLMap* map = new GOLMap(load_name);
-	//GOLMap* map = new GOLMap("maps/test.gol");
 
 	initTime = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < generations; i++) {
-
-
-		//system("cls");
-		//std::cout << *map << "\n";
-		map->nextGen();
-
-		//std::this_thread::sleep_for(std::chrono::milliseconds(750));
-	}
-
-	//system("cls");
-	//std::cout << *map << "\n";
-
-
+	//if (should_measure) std::cout << "Init time:  " << formatTime(initTime - startTime) << "\n";
+	if(should_measure) std::cout << formatTime(initTime - startTime) << "; ";
+	
+	map->run(generations);
+	
 	kernelTime = std::chrono::high_resolution_clock::now();
+	//if (should_measure) std::cout << "Kernel time: " << formatTime(kernelTime - initTime) << "\n";
+	if (should_measure) std::cout << formatTime(kernelTime - initTime) << "; ";
 
 	map->printToFile(save_name);
 
 	delete map;
 	finalTime = std::chrono::high_resolution_clock::now();
+	//if (should_measure) std::cout << "Final time: " << formatTime(finalTime - kernelTime) << "\n";
+	if (should_measure) std::cout << formatTime(finalTime - kernelTime) << ";\n";
 
 	std::cout << "Finished!\n";
 
-	std::cout << "Init time:  " << formatTime(initTime - startTime) << "\n";
-	std::cout << "Kernel time: " << formatTime(kernelTime - initTime) << "\n";
-	std::cout << "Final time: " << formatTime(finalTime - kernelTime) << "\n";
 
-	std::cout << "Total time: " << formatTime(finalTime - startTime) << "\n";
+	if (should_measure) std::cout << "Total time: " << formatTime(finalTime - startTime) << "\n";
 }
 
 std::string formatTime(std::chrono::steady_clock::duration time) {

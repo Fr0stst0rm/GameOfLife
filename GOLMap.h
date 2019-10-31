@@ -28,37 +28,36 @@ public:
 	GOLMap(int width, int height);
 	GOLMap(Size size);
 	~GOLMap();
-
-	void toggle(int x, int y);
-	void toggle(Point point);
-
-	int getNrOfNeighbors(int x, int y);
-
-	int nextGen();
-
+	
+	inline int getNrOfNeighbors(int x, int y);
+	inline int getNrOfNeighbors(int index);
+	
 	void printToFile(std::string path);
+
+	char getCell(int x, int y) const;
+
+	void run(int gen);
 
 private:
 
-	char m_dead = '.';
-	char m_alive = 'x';
+	const bool m_dead = false;
+	const bool m_alive = true;
+
+	const char m_charDead = '.';
+	const char m_charAlive = 'x';
 
 	Size m_Size;
 	int m_Generations = 0;
 
 	
-	char* m_Map;
-	char* m_Buffermap;
-	//char** m_Map;
-	//char ** m_Buffermap;
-
-	void initMap(int width, int height);
+	bool* m_Map;
+	bool* m_Buffermap;
+	
+	inline void initMap(int width, int height);
 
 	friend std::ostream& operator<<(std::ostream& strm, const GOLMap& map);
-
-	void copyMap2D(char** from, char** to);
-
-	void copyMap(char* from, char* to);
+	
+	void copyMap(bool* from, bool* to);
 
 };
 
