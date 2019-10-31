@@ -56,7 +56,9 @@ private:
 
 	friend std::ostream& operator<<(std::ostream& strm, const GOLMap& map);
 
-	void copyMap(char** from, char** to);
+	void copyMap2D(char** from, char** to);
+
+	void copyMap(char* from, char* to);
 
 };
 

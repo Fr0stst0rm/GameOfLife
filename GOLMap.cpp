@@ -32,7 +32,7 @@ GOLMap::GOLMap(std::string path)
 		if (!line.empty()) {
 			for (charNr = 0; charNr < width; charNr++) {
 				m_Map[XY_TO_INDEX(charNr,lineNr)] = line.c_str()[charNr];
-				m_Buffermap[lineNr][charNr] = line.c_str()[charNr];
+				m_Buffermap[XY_TO_INDEX(charNr, lineNr)] = line.c_str()[charNr];
 				//m_Map[lineNr][charNr] = line.c_str()[charNr];
 				//m_Buffermap[lineNr][charNr] = line.c_str()[charNr];
 			}
@@ -73,12 +73,19 @@ void GOLMap::initMap(int width, int height)
 	*/
 }
 
-void GOLMap::copyMap(char** from, char** to)
+void GOLMap::copyMap2D(char** from, char** to)
 {
 	for (int y = 0; y < m_Size.height; y++) {
 		for (int x = 0; x < m_Size.width; x++) {
 			to[y][x] = from[y][x];
 		}
+	}
+}
+
+void GOLMap::copyMap(char* from, char* to)
+{
+	for (int i = 0; i < (m_Size.height * m_Size.width); i++) {
+		to[i] = from[i];
 	}
 }
 
@@ -154,12 +161,15 @@ int GOLMap::nextGen()
 			//Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
 			//Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration am Leben
 			if (nrOfN == 3) {
-				m_Buffermap[y][x] = m_alive;
+				m_Buffermap[XY_TO_INDEX(x,y)] = m_alive;
+				//m_Buffermap[y][x] = m_alive;
 			}
 			//Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
 			//Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an Überbevölkerung.
 			if (nrOfN < 2 || nrOfN > 3) {
-				m_Buffermap[y][x] = m_dead;
+				m_Buffermap[XY_TO_INDEX(x, y)] = m_dead;
+				//m_Buffermap[y][x] = m_dead;
+
 			}
 		}
 	}
@@ -180,16 +190,19 @@ void GOLMap::printToFile(std::string path)
 
 std::ostream& operator<<(std::ostream& strm, const GOLMap& map)
 {
+	Size m_Size = map.m_Size;
 
 	for (int y = 0; y < map.m_Size.height - 1; y++) {
 		for (int x = 0; x < map.m_Size.width; x++) {
-			strm << map.m_Map[y][x];
+			strm << map.m_Map[XY_TO_INDEX(x, y)];
+			//strm << map.m_Map[y][x];
 		}
 		strm << std::endl;
 	}
 
 	for (int x = 0; x < map.m_Size.width; x++) {
-		strm << map.m_Map[map.m_Size.height - 1][x];
+		strm << map.m_Map[XY_TO_INDEX(x, map.m_Size.height - 1)];
+		//strm << map.m_Map[map.m_Size.height - 1][x];
 	}
 
 	return strm;
