@@ -8,7 +8,7 @@
 int generations = 250;
 std::string load_name = "maps/random10000_in.gol";
 std::string save_name = "out.gol";
-bool should_measure = false;
+bool should_measure = true;
 bool is_sequential = true;
 
 std::string formatTime(std::chrono::steady_clock::duration time);

@@ -82,7 +82,6 @@ inline int GOLMap::getNrOfNeighbors(int x, int y)
 	int row1 = ((x - 1) < 0) ? m_Size.width - 1 : (x - 1);
 	int row3 = ((x + 1) >= m_Size.width) ? 0 : (x + 1);
 
-
 	return m_Map[XY_TO_INDEX(row1, line1)]
 		+ m_Map[XY_TO_INDEX(x, line1)]
 		+ m_Map[XY_TO_INDEX(row3, line1)]
