@@ -1,5 +1,14 @@
 #include "GOLMap.h"
 
+//Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
+//Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration am Leben
+//Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
+//Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an Überbevölkerung.
+const bool lookup[2][9] = {
+	{0,0,0,1,0,0,0,0,0},
+	{0,0,1,1,0,0,0,0,0}
+};
+
 GOLMap::GOLMap(std::string path)
 {
 	int width = 0;
@@ -63,7 +72,14 @@ inline void GOLMap::initMap(int width, int height)
 
 void GOLMap::copyMap(bool* from, bool* to)
 {
+	/*
+	*from = *from + *to;
+	*to = *from - *to;
+	*from = *from - *to;
+	*/
+	
 	memcpy(to, from, sizeof(bool) * m_Size.height * m_Size.width);
+
 }
 
 GOLMap::~GOLMap()
@@ -107,17 +123,9 @@ void GOLMap::run(int gen)
 		for (int y = 0; y < m_Size.height; y++) {
 			for (int x = 0; x < m_Size.width; x++) {
 				nrOfN = getNrOfNeighbors(x, y);
+
 				index = XY_TO_INDEX(x, y);
-				//Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
-				//Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration am Leben
-				if (nrOfN == 3) {
-					m_Buffermap[index] = m_alive;
-				}
-				//Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
-				//Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an Überbevölkerung.
-				if (nrOfN < 2 || nrOfN > 3) {
-					m_Buffermap[index] = m_dead;
-				}
+				m_Buffermap[index] = lookup[m_Map[index]][nrOfN];
 			}
 		}
 		

@@ -45,7 +45,7 @@ private:
 
 	const char m_charDead = '.';
 	const char m_charAlive = 'x';
-
+	
 	Size m_Size;
 	int m_Generations = 0;
 
